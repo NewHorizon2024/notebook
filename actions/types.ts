@@ -4,3 +4,16 @@ export type FormSubmissionResponse = {
     acknowledged: boolean;
   } | null;
 };
+
+export type Command = {
+  title: string;
+  command: string;
+  description: string;
+  id: string;
+  _id: string
+};
+
+export type GetCommandResponse = {
+  error: unknown;
+  response: Command[] | null;
+};
