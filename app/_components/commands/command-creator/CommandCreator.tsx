@@ -3,7 +3,10 @@
 import Form from "next/form";
 import { formAction } from "@/actions/formAction";
 import { type ChangeEvent, useState } from "react";
+import {useDispatch} from 'react-redux'
 import { toast } from "react-toastify";
+import {startrefetch} from '@/redux/features/commandsSlice'
+
 
 const btnStyle =
   "p-2 bg-sky-800 text-white font-bold rounded-md cursor-pointer w-full disabled:cursor-not-allowed disabled:opacity-75";
@@ -12,6 +15,7 @@ export default function CommandCreator() {
   const [title, setTitle] = useState<string>("");
   const [command, setCommand] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const dispatch = useDispatch()
 
   function resetAllInputs() {
     setTitle("");
@@ -44,6 +48,7 @@ export default function CommandCreator() {
     const { error, response } = await formAction(formData);
     if (error) throw error;
     if (response?.acknowledged) {
+      dispatch(startrefetch())
       toast("Command added successfully");
     }
     if (!response?.acknowledged) {
@@ -53,7 +58,7 @@ export default function CommandCreator() {
   }
 
   return (
-    <div className="p-4 rounded-md shadow-md bg-white col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-4">
+    <div className="p-4 rounded-md shadow-md bg-white col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-4 fixed min-w-[400px]">
       <Form action={handleSubmitform} className="flex flex-col gap-4">
         <input
           required

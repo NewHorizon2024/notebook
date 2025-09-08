@@ -1,33 +1,48 @@
 "use client";
 
+import { useSelector } from "react-redux";
 import { getCommands } from "@/actions/getCommands";
-import { Command } from "@/actions/types";
-import { useEffect, useState } from "react";
 import CommandItem from "../command-item/CommandItem";
+import { useQuery } from "@tanstack/react-query";
+import ListItemsSkeleton from "@/skeletons/ListITemsSkeletons";
+import type { RootState } from "@/redux/store";
+import { type ChangeEvent, useMemo, useState } from "react";
 
 export default function CommandsList() {
-  const [error, setError] = useState<boolean>(false);
-  const [commands, setCommands] = useState<Command[]>([]);
-  useEffect(() => {
-    async function startGetCommands() {
-      const { error, response } = await getCommands();
-      if (error) {
-        setError(true);
-        return;
-      }
-      if (response) {
-        console.log(response)
-        setCommands(response);
-      }
-    }
-    startGetCommands();
-  }, []);
-  if (error) return <b>Something went wrong</b>;
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const refetch = useSelector((state: RootState) => state.commands.refetch);
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["commands", refetch],
+    queryFn: async () => getCommands(),
+    refetchOnWindowFocus: false,
+  });
+
+  const filteredData = useMemo(() => {
+    if (!data) return [];
+    return data.response?.filter((item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [data, searchTerm]);
+
+  function handleSearchTerm(event: ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(event.target.value);
+  }
+
+  if (isError) return <b>Something went wrong</b>;
+  if (isLoading) return <ListItemsSkeleton />;
   return (
-    <ul className="flex flex-col gap-4 col-span-full">
-      {commands.map(({ id, title, command }) => (
-        <CommandItem key={id} title={title} command={command} />
-      ))}
-    </ul>
+    <div className="flex flex-col gap-4">
+      <input
+        onChange={handleSearchTerm}
+        type="search"
+        placeholder="Search by title"
+        className="h-10 border-b-2 border-b-sky-800 w-full p-2 outline-none"
+      />
+      <ul className="flex flex-col gap-4 col-span-full">
+        {filteredData?.map(({ id, title, command }) => (
+          <CommandItem key={id} title={title} command={command} />
+        ))}
+      </ul>
+    </div>
   );
 }
