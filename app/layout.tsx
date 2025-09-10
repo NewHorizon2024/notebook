@@ -1,6 +1,10 @@
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import SectionLayout from "./_layouts/SectionLayout";
+import { ToastContainer } from "react-toastify";
+import QueryProvider from "@/tan-stack-redux/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <QueryProvider >
+          <SectionLayout>
+            {children}
+            <ToastContainer position="top-center" />
+          </SectionLayout>
+        </QueryProvider >
       </body>
     </html>
   );
