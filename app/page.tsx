@@ -10,7 +10,7 @@ export default function Home() {
       <div className="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-4">
         <CommandCreator />
       </div>
-      <div className="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-8">
+      <div className="col-span-12 sm:col-span-6 md:col-span-6 lg:col-span-6 xl:col-span-8 ">
         <CommandsList />
       </div>
     </div>

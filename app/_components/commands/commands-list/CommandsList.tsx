@@ -1,12 +1,14 @@
 "use client";
 
+import { type ChangeEvent, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { getCommands } from "@/actions/getCommands";
 import CommandItem from "../command-item/CommandItem";
 import { useQuery } from "@tanstack/react-query";
 import ListItemsSkeleton from "@/skeletons/ListITemsSkeletons";
 import type { RootState } from "@/redux/store";
-import { type ChangeEvent, useMemo, useState } from "react";
+
+
 
 export default function CommandsList() {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -31,7 +33,7 @@ export default function CommandsList() {
   if (isError) return <b>Something went wrong</b>;
   if (isLoading) return <ListItemsSkeleton />;
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col ">
       <input
         onChange={handleSearchTerm}
         type="search"
@@ -39,8 +41,8 @@ export default function CommandsList() {
         className="h-14 border-b-2 border-b-sky-800 p-2 outline-none w-full sticky top-0 bg-white z-10 shadow-sm"
       />
   
-      <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
-        <ul className="flex flex-col gap-4">
+      <div className="flex-1 overflow-y-auto p-4 scrollbar-hide ">
+        <ul className="flex flex-col gap-4 ">
           {filteredData?.map(({ id, title, command }) => (
             <CommandItem key={id} title={title} command={command} />
           ))}
