@@ -1,4 +1,5 @@
 "use server";
+
 import { client } from "@/mongodb/mongodb.config";
 import { COMMANDS_COLLECTION, NOTEBOOK_DB } from "@/mongodb/variables";
 import type { Command, GetCommandResponse } from "./types";

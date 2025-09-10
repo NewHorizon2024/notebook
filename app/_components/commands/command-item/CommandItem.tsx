@@ -7,8 +7,9 @@ import DropdownList from "../command-item/DropdownList";
 type CommandItemProps = Readonly<{
   title: string;
   command: string;
+  id: string;
 }>;
-export default function CommandItem({ title, command }: CommandItemProps) {
+export default function CommandItem({ id, title, command }: CommandItemProps) {
   function handleCopyCommand() {
     navigator.clipboard
       .writeText(command)
@@ -18,7 +19,7 @@ export default function CommandItem({ title, command }: CommandItemProps) {
   return (
     <li className="p-5 rounded-md shadow-md bg-white flex flex-col gap-4 ">
       <div className="flex gap-3">
-        <DropdownList />
+        <DropdownList commandId={id} />
         <h2 className="text-lg font-bold">{title}</h2>
       </div>
       <pre className="p-2 bg-gray-200 rounded-md flex justify-between">

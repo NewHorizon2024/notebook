@@ -5,12 +5,20 @@ export type FormSubmissionResponse = {
   } | null;
 };
 
+export type DeleteCommandResponse = {
+  error: unknown;
+  response: {
+    acknowledged: boolean;
+    deletedCount: number;
+  } | null;
+};
+
 export type Command = {
   title: string;
   command: string;
   description: string;
   id: string;
-  _id: string
+  _id: string;
 };
 
 export type GetCommandResponse = {
