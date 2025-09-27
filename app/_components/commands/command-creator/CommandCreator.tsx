@@ -3,10 +3,9 @@
 import Form from "next/form";
 import { formAction } from "@/actions/formAction";
 import { type ChangeEvent, useState } from "react";
-import {useDispatch} from 'react-redux'
 import { toast } from "react-toastify";
-import {startrefetch} from '@/redux/features/commandsSlice'
-
+import { useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const btnStyle =
   "p-2 bg-sky-800 text-white font-bold rounded-md cursor-pointer w-full disabled:cursor-not-allowed disabled:opacity-75";
@@ -15,7 +14,10 @@ export default function CommandCreator() {
   const [title, setTitle] = useState<string>("");
   const [command, setCommand] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const dispatch = useDispatch()
+
+  const params = useSearchParams();
+  const bucketName = params.get("name");
+  const queryClient = useQueryClient();
 
   function resetAllInputs() {
     setTitle("");
@@ -40,16 +42,21 @@ export default function CommandCreator() {
   }
 
   async function handleSubmitform() {
+    if (!bucketName) {
+      toast.error("Unable to create your form");
+      return;
+    }
     const formData = new FormData();
     formData.append("title", title);
     formData.append("command", command);
     formData.append("description", description);
+    formData.append("bucketName", bucketName);
 
     const { error, response } = await formAction(formData);
     if (error) throw error;
     if (response?.acknowledged) {
-      dispatch(startrefetch())
       toast("Command added successfully");
+      queryClient.invalidateQueries({ queryKey: [bucketName] });
     }
     if (!response?.acknowledged) {
       toast("Failed to add the command");

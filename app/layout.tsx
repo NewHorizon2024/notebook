@@ -5,6 +5,8 @@ import "./globals.css";
 import SectionLayout from "./_layouts/SectionLayout";
 import { ToastContainer } from "react-toastify";
 import QueryProvider from "@/tan-stack-redux/QueryProvider";
+import HeaderLayout from "./_layouts/HeaderLayout";
+import Header from "./_components/header/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +34,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider >
+          <HeaderLayout>
+            <Header />
+          </HeaderLayout>
           <SectionLayout>
             {children}
             <ToastContainer position="top-center" />

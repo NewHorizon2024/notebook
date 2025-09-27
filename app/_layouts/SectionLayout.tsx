@@ -6,5 +6,5 @@ type SectionLayoutProps = Readonly<{
   children: ReactNode;
 }>;
 export default function SectionLayout({ children }: SectionLayoutProps) {
-  return <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{children}</section>;
+  return <section className="w-full max-w-7xl mx-auto py-8">{children}</section>;
 }

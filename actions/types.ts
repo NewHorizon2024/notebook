@@ -25,3 +25,13 @@ export type GetCommandResponse = {
   error: unknown;
   response: Command[] | null;
 };
+
+export type Bucket = {
+  _id: string;
+  name: string;
+};
+
+export type GetBucketsResponse = {
+  error: unknown;
+  response: Bucket[] | null;
+};
