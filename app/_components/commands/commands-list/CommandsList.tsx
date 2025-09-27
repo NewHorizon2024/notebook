@@ -1,21 +1,26 @@
 "use client";
 
 import { type ChangeEvent, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 import { getCommands } from "@/actions/getCommands";
 import CommandItem from "../command-item/CommandItem";
 import { useQuery } from "@tanstack/react-query";
 import ListItemsSkeleton from "@/skeletons/ListITemsSkeletons";
-import type { RootState } from "@/redux/store";
+import { useSearchParams } from "next/navigation";
 //import EmptyList from "./EmptyList";
 
 export default function CommandsList() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const refetch = useSelector((state: RootState) => state.commands.refetch);
+  const params = useSearchParams();
+  const bucketName = params.get("name");
+
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["commands", refetch],
-    queryFn: async () => getCommands(),
+    queryKey: [bucketName],
+    queryFn: async () => {
+      if (!bucketName) throw new Error("No bucket name");
+      return getCommands(bucketName);
+    },
     refetchOnWindowFocus: false,
+    staleTime: 604800000,
   });
 
   const filteredData = useMemo(() => {
@@ -32,7 +37,7 @@ export default function CommandsList() {
   if (isError) return <b>Something went wrong</b>;
   if (isLoading) return <ListItemsSkeleton />;
   // if (!isLoading && !filteredData?.length) return <EmptyList />
-   
+
   return (
     <div className="h-screen flex flex-col">
       {filteredData && filteredData.length > 0 && (

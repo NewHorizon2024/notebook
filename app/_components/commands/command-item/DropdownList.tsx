@@ -6,20 +6,25 @@ import clsx from "clsx";
 import EditIcon from "@/icons/EditIcon";
 import TrashIcon from "@/icons/TrashIcon";
 import deleteCommand from "@/actions/deleteCommand";
-import { useMutation } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
-import { startrefetch } from "@/redux/features/commandsSlice";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 type DropdownListProps = Readonly<{ commandId: string }>;
 
 export default function DropdownList({ commandId }: DropdownListProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
 
-  const { mutate, data } = useMutation({
+  const queryClient = useQueryClient();
+  const params = useSearchParams();
+  const bucketName = params.get("name");
+
+  const { mutate } = useMutation({
     mutationKey: ["deleteCommand"],
     mutationFn: async (id: string) => deleteCommand(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [bucketName] });
+    },
   });
 
   useEffect(() => {
@@ -35,12 +40,6 @@ export default function DropdownList({ commandId }: DropdownListProps) {
   async function handleDeleteCommand() {
     mutate(commandId);
   }
-
-  useEffect(() => {
-    if (data?.response?.deletedCount) {
-      dispatch(startrefetch());
-    }
-  }, [data]);
 
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
